@@ -1,0 +1,21 @@
+﻿<script type="text/template" id="sb_actions_template">
+    <div class="actions actions-view" data-selector="actions" data-id="<%- id %>">
+        <span class="glyphicon glyphicon-retweet action-turnover" data-command="inventoryTurnover" title="Inventory turnover"></span>
+        <span class="glyphicon glyphicon-edit action-edit" data-command="edit" title="Edit"></span>
+        <span class="glyphicon glyphicon-save action-save" data-command="save" title="Save"></span>
+        <span class="glyphicon glyphicon-remove-circle action-cancel" data-command="cancel" title="Cancel"></span>
+        <span class="glyphicon glyphicon-trash action-delete" data-command="delete" title="Delete"></span>
+        <span class="glyphicon glyphicon-signal action-statistics" data-command="statistics" title="Statistics"></span>
+        <span class="glyphicon glyphicon-user" data-command="perOperatorStatistic" title="Statistic per operator"></span>
+    </div>
+</script>
+
+<script type="text/template" id="sb_productName_template">
+    <input value="<%- value %>" class="cell" data-selector="name" maxlength="50" readonly/>
+    <input type="hidden" data-selector="oldName" />
+</script>
+
+<script type="text/template" id="sb_productPrice_template">
+    <input value="<%- value %>" class="cell" data-selector="price" readonly />
+    <input type="hidden" data-selector="oldPrice"/>
+</script>

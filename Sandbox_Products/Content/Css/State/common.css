@@ -1,0 +1,11 @@
+﻿.product-list .is-selected td {
+    background-color: lightblue;
+}
+
+.product-list .is-editing td {
+    background-color: beige;
+}
+
+tr.hasError td {
+    background-color: #d9534f !important;
+}

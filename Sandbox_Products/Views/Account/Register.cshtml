@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<h2>@ViewBag.Title.</h2>
+<div data-component="page">
+    <div data-component="auth">
+        <div data-component="register"></div>
+    </div>
+</div>
+
+@Html.Partial("sb_register_template")
+@Html.Partial("sb_registerModalBody_template")
+
+<div class="modal fade" id="registerModal" role="dialog"></div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+
+        //  options
+        //      authComponentOptions
+        //      registerModalComponentOptions
+        //  components
+        //      authComponent
+        //      registerModalComponent
+        function Page(options){
+            Component.apply(this, arguments);
+
+            this._initComponents();
+            this._initHandlers();
+        }
+
+        Page.prototype = Object.create(Component.prototype);
+
+        Page.prototype._initComponents = function (){
+            this._components.authComponent = new Sb_Auth(this._options.authComponentOptions);            
+        };
+
+        Page.prototype._initHandlers = function(){
+            var self = this;
+            
+            this._components.authComponent.on('register:success', function (e, data) {
+                self._options.registerModalComponentOptions.endpoints = {
+                    mainUrl: data.redirectUrl
+                };
+                self._components.registerModalComponent = new Sb_RegisterModal(self._options.registerModalComponentOptions);
+
+                self._components.registerModalComponent.showMessage({
+                    title: sb_messages.REGISTER_SUCCESS_HEADER,
+                    message: data.message
+                });
+            })
+        };
+
+        $(function () {
+            var registerComponentOptions = {
+                element:  $('[data-component="register"]'),
+                enpoints: {
+                    registerUrl: '@Url.Action("Register")'
+                }
+            };
+
+            var authComponentOptions = {
+                element: $('[data-component="auth"]'),
+                options: {
+                    registerComponentOptions: registerComponentOptions
+                }
+            };
+
+            var registerModalComponentOptions = {
+                element: $('#registerModal')
+            };
+
+            var page = new Page({
+                element: $('[data-component="page"]'),
+                options: {
+                    authComponentOptions: authComponentOptions,
+                    registerModalComponentOptions: registerModalComponentOptions
+                }
+            });
+        });
+    </script>
+}

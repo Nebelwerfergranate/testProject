@@ -1,0 +1,47 @@
+﻿@* options
+    id
+    name
+    operations [{Id, Name}]
+*@
+<script type="text/template" id="sb_productTurnover_template">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Products turnover <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> </h4>                 
+            </div>
+            <form class="form-horizontal" data-selector="productTurnover-form" method="post">
+                <div class="modal-body">
+                    <p class="hide text-danger" data-selector="form-error-message"></p>
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="ProductId" value="<%-id%>"/>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Name</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" value="<%- name %>" disabled/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Operation</label>
+                        <div class="col-md-8">
+                            <select class="form-control" name="ProductOperationId">
+                                <% for (var i = 0; i < operations.length; i++) { %>
+                                <option value="<%-operations[i].Id%>"><%-operations[i].Name%></option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 control-label">Products count</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="productsCount" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-command="cancel" data-dismiss="modal">Cancel</button>
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</script>

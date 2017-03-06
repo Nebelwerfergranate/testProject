@@ -1,0 +1,34 @@
+﻿table.product-list tr.jqgrow td {
+    white-space: normal;
+}
+.product-list .cell {
+    width: 100%;
+    max-width: none;
+    border: none;
+    background-color: transparent;
+}
+
+    .product-list .cell:focus {
+        outline: none;
+    }
+
+.actions {
+    white-space: normal;
+}
+
+    .actions .glyphicon {
+        font-size: 15px;
+        cursor: pointer;
+        margin: 0 10px;
+    }
+
+    /* Modes: actions-view, actions-edit */
+    /* Inputs: action-turnover action-edit, action-save, action-cancel, action-delete, action-statistics */
+    .actions.actions-view .action-save,
+    .actions.actions-view .action-cancel {
+        display: none;
+    }
+
+    .actions.actions-edit .action-edit {
+        display: none;
+    }

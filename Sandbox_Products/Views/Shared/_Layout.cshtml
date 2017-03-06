@@ -1,0 +1,95 @@
+﻿@using Sandbox_Products.BLL.Validation
+@{
+    String rules = Rules.GetSerialized();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("styles", required: false)
+
+</head>
+<body data-component="layout">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Sandbox products", "Index", "Product", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Products", "Index", "Product")</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Html.Partial("sb_confirm_template")
+    @Html.Partial("sb_notificator_template")
+
+    <div class="modal fade" id="confirmModal" role="dialog"></div>
+
+    <script>
+        var sb = {};
+    </script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/lib")
+    @Scripts.Render("~/bundles/core")
+    @Scripts.Render("~/bundles/resources")
+    @Scripts.Render("~/bundles/components")
+
+    <script>      
+        function Layout(options) {
+            Component.apply(this, arguments);
+
+            this._initComponents();
+        }
+
+        Layout.prototype = Object.create(Component.prototype);
+
+        Layout.prototype._initComponents = function () {
+            this._components.confirmComponent = new Sb_Confirm(this._options.confirmComponentOptions);
+        };
+
+        $(function () {
+            var confirmComponentOptions = {
+                element: $('#confirmModal'),
+                options: {
+                    global: sb
+                }
+            };
+
+            sb.validation.init(@Html.Raw(rules));                     
+            
+            var layout = new Layout({
+                element: $('[data-component="layout"]'),
+                options: {
+                    confirmComponentOptions: confirmComponentOptions
+                }
+            });
+        });
+    </script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

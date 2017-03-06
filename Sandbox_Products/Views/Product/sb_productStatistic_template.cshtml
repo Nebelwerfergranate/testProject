@@ -1,0 +1,29 @@
+﻿@*
+    Options:
+        Name
+        Price
+        Count
+        TotalCost
+*@
+<script type="text/template" id="sb_productStatistic_template">
+    <h2>Statistic</h2>
+    <p class="hide text-danger" data-selector="form-error-message"></p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product name</th>
+                <th>Product cost</th>
+                <th>Total count</th>
+                <th>Total cost</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><%- Name %></td>
+                <td><%- Price %></td>
+                <td><%- Count %></td>
+                <td><%- TotalCost %></td>
+            </tr>
+        </tbody>
+    </table>
+</script>

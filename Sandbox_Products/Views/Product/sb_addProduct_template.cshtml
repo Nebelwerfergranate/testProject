@@ -1,0 +1,24 @@
+﻿<script type="text/template" id="sb_addProduct_template">
+    <h4 class="header-toggle" data-command="toggle">Fill in the form to add new product</h4>
+    <form class="form-horizontal form-toggle form-toggle-hidden" data-selector="addProduct-form" method="post">
+        <p class="hide text-danger" data-selector="form-error-message"></p>
+        @Html.AntiForgeryToken()        
+        <div class="form-group">
+            <label class="col-md-2 control-label">Name</label>
+            <div class="col-md-10">
+                <input type="text" name="productName" class="form-control" maxlength="50" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Price</label>
+            <div class="col-md-10">
+                <input type="text" name="productPrice" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add product" class="btn btn-default" />
+            </div>
+        </div>
+    </form>
+</script>

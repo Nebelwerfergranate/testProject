@@ -1,0 +1,17 @@
+﻿<script type="text/template" id="sb_confirm_template">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>                
+                <h4 class="modal-title">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p><%- message %></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button class="btn btn-<%- type %>" data-command="confirm" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div> 
+</script>

@@ -1,0 +1,25 @@
+﻿<script type="text/template" id="sb_register_template">
+    <form class="form-horizontal" data-selector="register-form" method="post">
+        <p class="hide text-danger" data-selector="form-error-message"></p>
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <label class="col-md-2 control-label">Login</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" name="Login" required />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Password</label>
+            <div class="col-md-10"><input type="password" class="form-control" name="Password" required /></div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">ConfirmPassword</label>
+            <div class="col-md-10"><input type="password" class="form-control" name="ConfirmPassword" required /></div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-default" value="Register" />
+            </div>
+        </div>
+    </form>
+</script>

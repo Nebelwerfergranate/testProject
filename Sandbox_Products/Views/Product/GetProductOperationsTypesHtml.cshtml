@@ -1,0 +1,10 @@
+﻿@using Sandbox_Products.Models.Product;
+@model Sandbox_Products.Models.ItemsResult<GetProductsOperationsTypesViewModel>
+
+<select>
+    <option value="">All</option>
+    @foreach(GetProductsOperationsTypesViewModel type in Model.Items)
+    {
+        <option value="@type.Id">@type.Name</option>
+    }
+</select>

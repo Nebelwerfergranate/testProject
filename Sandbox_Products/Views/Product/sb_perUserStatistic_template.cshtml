@@ -1,0 +1,19 @@
+﻿<script type="text/template" id="sb_perUserStatistic_template">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Per user statistic<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> </h4>
+            </div>
+            <div class="modal-body grid-container">
+                <p class="hide text-danger" data-selector="form-error-message"></p>
+                <table id="perUserOperationsList"></table>
+                <div id="perUserOperationsPager"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</script>
+
+@Html.Partial("sb_resetButtonTemplate")

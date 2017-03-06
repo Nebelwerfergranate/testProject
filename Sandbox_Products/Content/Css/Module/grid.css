@@ -1,0 +1,13 @@
+﻿/* bootsrap set border box */
+.grid-container * {
+    box-sizing: content-box;
+}
+
+.grid-container .search-reset {
+    float: right;
+    margin-right: 10%;
+}
+
+.grid-container .ui-search-clear{
+    width: 20px;
+}

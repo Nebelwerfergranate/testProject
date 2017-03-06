@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SandboxProducts.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Logs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" />
+          <Property Name="DateTimeCreated" Type="datetime" Nullable="false" />
+          <Property Name="Handled" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="7" Scale="2" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductsOperations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="OperatorName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="OperationTypeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ProductsCount" Type="smallint" Nullable="false" />
+          <Property Name="DateTimeCreated" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductsOperationsTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="50" />
+          <Property Name="DisplayOrder" Type="int" />
+          <Property Name="DisplayColor" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Vitalii_Test.dbo.vw_ProductsOperations' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_ProductsOperations">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="OperatorName" />
+            <PropertyRef Name="OperationTypeId" />
+            <PropertyRef Name="ProductsCount" />
+            <PropertyRef Name="DateTimeCreated" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="OperatorName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="OperationTypeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ProductsCount" Type="smallint" Nullable="false" />
+          <Property Name="DateTimeCreated" Type="datetime" Nullable="false" />
+          <Property Name="ProductsCountDelta" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Vitalii_Test.dbo.vw_ProductsOperationsDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_ProductsOperationsDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="OperatorName" />
+            <PropertyRef Name="OperationTypeId" />
+            <PropertyRef Name="ProductsCount" />
+            <PropertyRef Name="DateTimeCreated" />
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="ProductName" />
+            <PropertyRef Name="ProductPrice" />
+            <PropertyRef Name="ProductIsDeleted" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="OperatorName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="OperationTypeId" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="ProductsCount" Type="smallint" Nullable="false" />
+          <Property Name="DateTimeCreated" Type="datetime" Nullable="false" />
+          <Property Name="ProductsCountDelta" Type="int" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProductPrice" Type="decimal" Precision="7" Scale="2" Nullable="false" />
+          <Property Name="ProductIsDeleted" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_ProductOperations_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="ProductsOperations" Type="Self.ProductsOperations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductsOperations">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ProductsOperations_ProductsOperationsTypes">
+          <End Role="ProductsOperationsTypes" Type="Self.ProductsOperationsTypes" Multiplicity="1" />
+          <End Role="ProductsOperations" Type="Self.ProductsOperations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductsOperationsTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductsOperations">
+              <PropertyRef Name="OperationTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetProductCountById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="productId" Type="int" Mode="In" />
+          <Parameter Name="count" Type="bigint" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="SandboxProductsStoreContainer">
+          <EntitySet Name="Logs" EntityType="Self.Logs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductsOperations" EntityType="Self.ProductsOperations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductsOperationsTypes" EntityType="Self.ProductsOperationsTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vw_ProductsOperations" EntityType="Self.vw_ProductsOperations" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_ProductsOperations].[ID] AS [ID], 
+    [vw_ProductsOperations].[ProductId] AS [ProductId], 
+    [vw_ProductsOperations].[OperatorName] AS [OperatorName], 
+    [vw_ProductsOperations].[OperationTypeId] AS [OperationTypeId], 
+    [vw_ProductsOperations].[ProductsCount] AS [ProductsCount], 
+    [vw_ProductsOperations].[DateTimeCreated] AS [DateTimeCreated], 
+    [vw_ProductsOperations].[ProductsCountDelta] AS [ProductsCountDelta]
+    FROM [dbo].[vw_ProductsOperations] AS [vw_ProductsOperations]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_ProductsOperationsDetail" EntityType="Self.vw_ProductsOperationsDetail" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_ProductsOperationsDetail].[Id] AS [Id], 
+    [vw_ProductsOperationsDetail].[OperatorName] AS [OperatorName], 
+    [vw_ProductsOperationsDetail].[OperationTypeId] AS [OperationTypeId], 
+    [vw_ProductsOperationsDetail].[ProductsCount] AS [ProductsCount], 
+    [vw_ProductsOperationsDetail].[DateTimeCreated] AS [DateTimeCreated], 
+    [vw_ProductsOperationsDetail].[ProductsCountDelta] AS [ProductsCountDelta], 
+    [vw_ProductsOperationsDetail].[ProductId] AS [ProductId], 
+    [vw_ProductsOperationsDetail].[ProductName] AS [ProductName], 
+    [vw_ProductsOperationsDetail].[ProductPrice] AS [ProductPrice], 
+    [vw_ProductsOperationsDetail].[ProductIsDeleted] AS [ProductIsDeleted]
+    FROM [dbo].[vw_ProductsOperationsDetail] AS [vw_ProductsOperationsDetail]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="fk_ProductOperations_Products" Association="Self.fk_ProductOperations_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductsOperations" EntitySet="ProductsOperations" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ProductsOperations_ProductsOperationsTypes" Association="Self.fk_ProductsOperations_ProductsOperationsTypes">
+            <End Role="ProductsOperationsTypes" EntitySet="ProductsOperationsTypes" />
+            <End Role="ProductsOperations" EntitySet="ProductsOperations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SandboxProducts" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MsSqlConn" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ProductsOperations" EntityType="SandboxProducts.ProductsOperations" />
+          <EntitySet Name="Logs" EntityType="SandboxProducts.Logs" />
+          <EntitySet Name="Products" EntityType="SandboxProducts.Products" />
+          <AssociationSet Name="fk_ProductOperations_Products" Association="SandboxProducts.fk_ProductOperations_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="ProductsOperations" EntitySet="ProductsOperations" />
+          </AssociationSet>
+          <FunctionImport Name="GetProductCountById">
+            <Parameter Name="productId" Mode="In" Type="Int32" />
+            <Parameter Name="count" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <EntitySet Name="vw_ProductsOperations" EntityType="SandboxProducts.vw_ProductsOperations" />
+          <EntitySet Name="vw_ProductsOperationsDetail" EntityType="SandboxProducts.vw_ProductsOperationsDetail" />
+          <EntitySet Name="ProductsOperationsTypes" EntityType="SandboxProducts.ProductsOperationsTypes" />
+          <AssociationSet Name="fk_ProductsOperations_ProductsOperationsTypes" Association="SandboxProducts.fk_ProductsOperations_ProductsOperationsTypes">
+            <End Role="ProductsOperationsTypes" EntitySet="ProductsOperationsTypes" />
+            <End Role="ProductsOperations" EntitySet="ProductsOperations" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ProductsOperations">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="OperatorName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="OperationTypeId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ProductsCount" Type="Int16" Nullable="false" />
+          <Property Name="DateTimeCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Products" Relationship="SandboxProducts.fk_ProductOperations_Products" FromRole="ProductsOperations" ToRole="Products" />
+          <NavigationProperty Name="ProductsOperationsTypes" Relationship="SandboxProducts.fk_ProductsOperations_ProductsOperationsTypes" FromRole="ProductsOperations" ToRole="ProductsOperationsTypes" />
+        </EntityType>
+        <EntityType Name="Logs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateTimeCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Handled" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="7" Scale="2" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ProductsOperations" Relationship="SandboxProducts.fk_ProductOperations_Products" FromRole="Products" ToRole="ProductsOperations" />
+        </EntityType>
+        <Association Name="fk_ProductOperations_Products">
+          <End Type="SandboxProducts.Products" Role="Products" Multiplicity="1" />
+          <End Type="SandboxProducts.ProductsOperations" Role="ProductsOperations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductsOperations">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="vw_ProductsOperations">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="OperatorName" />
+            <PropertyRef Name="OperationTypeId" />
+            <PropertyRef Name="ProductsCount" />
+            <PropertyRef Name="DateTimeCreated" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="OperatorName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="OperationTypeId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ProductsCount" Type="Int16" Nullable="false" />
+          <Property Name="DateTimeCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ProductsCountDelta" Type="Int32" />
+        </EntityType>
+        <EntityType Name="vw_ProductsOperationsDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="OperatorName" />
+            <PropertyRef Name="OperationTypeId" />
+            <PropertyRef Name="ProductsCount" />
+            <PropertyRef Name="DateTimeCreated" />
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="ProductName" />
+            <PropertyRef Name="ProductPrice" />
+            <PropertyRef Name="ProductIsDeleted" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="OperatorName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="OperationTypeId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ProductsCount" Type="Int16" Nullable="false" />
+          <Property Name="DateTimeCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ProductsCountDelta" Type="Int32" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProductPrice" Type="Decimal" Nullable="false" Precision="7" Scale="2" />
+          <Property Name="ProductIsDeleted" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductsOperationsTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DisplayOrder" Type="Int32" />
+          <Property Name="DisplayColor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProductsOperations" Relationship="SandboxProducts.fk_ProductsOperations_ProductsOperationsTypes" FromRole="ProductsOperationsTypes" ToRole="ProductsOperations" />
+        </EntityType>
+        <Association Name="fk_ProductsOperations_ProductsOperationsTypes">
+          <End Type="SandboxProducts.ProductsOperationsTypes" Role="ProductsOperationsTypes" Multiplicity="1" />
+          <End Type="SandboxProducts.ProductsOperations" Role="ProductsOperations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProductsOperationsTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ProductsOperations">
+              <PropertyRef Name="OperationTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SandboxProductsStoreContainer" CdmEntityContainer="MsSqlConn">
+          <EntitySetMapping Name="ProductsOperations">
+            <EntityTypeMapping TypeName="SandboxProducts.ProductsOperations">
+              <MappingFragment StoreEntitySet="ProductsOperations">
+                <ScalarProperty Name="DateTimeCreated" ColumnName="DateTimeCreated" />
+                <ScalarProperty Name="ProductsCount" ColumnName="ProductsCount" />
+                <ScalarProperty Name="OperationTypeId" ColumnName="OperationTypeId" />
+                <ScalarProperty Name="OperatorName" ColumnName="OperatorName" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="SandboxProducts.Logs">
+              <MappingFragment StoreEntitySet="Logs">
+                <ScalarProperty Name="Handled" ColumnName="Handled" />
+                <ScalarProperty Name="DateTimeCreated" ColumnName="DateTimeCreated" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="SandboxProducts.Products">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetProductCountById" FunctionName="SandboxProducts.Store.GetProductCountById" />
+          <EntitySetMapping Name="vw_ProductsOperations">
+            <EntityTypeMapping TypeName="SandboxProducts.vw_ProductsOperations">
+              <MappingFragment StoreEntitySet="vw_ProductsOperations">
+                <ScalarProperty Name="ProductsCountDelta" ColumnName="ProductsCountDelta" />
+                <ScalarProperty Name="DateTimeCreated" ColumnName="DateTimeCreated" />
+                <ScalarProperty Name="ProductsCount" ColumnName="ProductsCount" />
+                <ScalarProperty Name="OperationTypeId" ColumnName="OperationTypeId" />
+                <ScalarProperty Name="OperatorName" ColumnName="OperatorName" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Id" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_ProductsOperationsDetail">
+            <EntityTypeMapping TypeName="SandboxProducts.vw_ProductsOperationsDetail">
+              <MappingFragment StoreEntitySet="vw_ProductsOperationsDetail">
+                <ScalarProperty Name="ProductIsDeleted" ColumnName="ProductIsDeleted" />
+                <ScalarProperty Name="ProductPrice" ColumnName="ProductPrice" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductsCountDelta" ColumnName="ProductsCountDelta" />
+                <ScalarProperty Name="DateTimeCreated" ColumnName="DateTimeCreated" />
+                <ScalarProperty Name="ProductsCount" ColumnName="ProductsCount" />
+                <ScalarProperty Name="OperationTypeId" ColumnName="OperationTypeId" />
+                <ScalarProperty Name="OperatorName" ColumnName="OperatorName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductsOperationsTypes">
+            <EntityTypeMapping TypeName="SandboxProducts.ProductsOperationsTypes">
+              <MappingFragment StoreEntitySet="ProductsOperationsTypes">
+                <ScalarProperty Name="DisplayColor" ColumnName="DisplayColor" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div data-component="page">
+    <h2>Index</h2>
+    <section data-component="add-product"></section>
+    <section data-component="products" class="grid-container">
+        @Html.AntiForgeryToken()
+        <p class="hide text-danger" data-selector="form-error-message"></p>
+        <table id="productList" class="product-list"></table>
+        <div id="pager"></div>
+    </section>
+    <section data-component="productStatistic"></section>
+</div>
+
+<div id="productTurnoverModal" class="modal fade" role="dialog"></div>
+<div id="productOperationStatisticModal" class="modal fade" role="dialog"></div>
+<div id="perUserStatisticModal" class="modal fade" role="dialog"></div>
+
+@Html.Partial("sb_addproduct_template")
+@Html.Partial("sb_actions_template")
+@Html.Partial("sb_productTurnover_template")
+@Html.Partial("sb_productStatistic_template")
+@Html.Partial("sb_productOperationStatistic_template") 
+@Html.Partial("sb_perUserStatistic_template")
+@Html.Partial("sb_productOperationStatistic_subgrid_template")
+@section scripts{
+    @Scripts.Render("~/bundles/jqgrid")
+    <script>
+
+        function Page(options) {
+            Component.apply(this, arguments);
+
+            this._initComponents();
+            this._initHandlers();
+        }
+
+        Page.prototype = Object.create(Component.prototype);
+
+        Page.prototype._initComponents = function () {
+            if (this._options.productComponentOptions != null) {
+                this._components.ProductComponent = new Sb_Products(this._options.productComponentOptions);
+            }
+        };
+
+        Page.prototype._initHandlers = function () {
+            var self = this;
+            // todo add Bootstrap Growl alert
+
+        };
+
+        $(function () {
+            var addProductComponentOptions = {
+                element: $('[data-component="add-product"]'),
+                endpoints: {
+                    addProduct: '@Url.Action("AddProduct","Product")'
+                }
+            };
+
+            var productListComponentOptions = {
+                element: $('#productList'),
+                endpoints: {
+                    getProducts: '@Url.Action("GetProducts", "Product")'
+                },
+                options: {
+                    pagerElementId: 'pager'
+                }
+            }
+
+            var productTurnoverComponentOptions = {
+                element: $('#productTurnoverModal'),
+                endpoints: {
+                    save: '@Url.Action("SaveProductOperation", "Product")',
+                    getProductOperations: '@Url.Action("GetProductOperationsTypes", "Product")'
+                },
+            };
+
+            var productStatisticComponentOptions = {
+                element: $('[data-component="productStatistic"]'),
+                endpoints: {
+                    getProductDetail: '@Url.Action("GetProductDetail", "Product")'
+                }
+            };
+
+            var productOperationStatisticComponentOptions = {
+                element: $('#productOperationStatisticModal'),
+                endpoints: {
+                    getProductOperations: '@Url.Action("GetProductOperations", "Product")',
+                    getProductOperationsTypesHtml: '@Url.Action("GetProductOperationsTypesHtml")'
+                }
+            };
+
+            var perUserStatisticComponentOptions = {
+                element: $('#perUserStatisticModal'),
+                endpoints: {
+                    getPerUserOperationsSum: '@Url.Action("GetPerUseroperationsSum", "Product")'
+                },
+                options: {
+                    productOperationStatisticComponentOptions: productOperationStatisticComponentOptions
+                }
+            };
+
+            var productComponentOptions = {
+                element: $('[data-component="products"]'),
+                options: {
+                    productListComponentOptions: productListComponentOptions,
+                    addProductComponentOptions: addProductComponentOptions,
+                    productTurnoverComponentOptions: productTurnoverComponentOptions,
+                    productStatisticComponentOptions: productStatisticComponentOptions,
+                    productOperationStatisticComponentOptions: productOperationStatisticComponentOptions,
+                    perUserStatisticComponentOptions: perUserStatisticComponentOptions
+                },
+                endpoints: {
+                    updateProduct: '@Url.Action("UpdateProduct", "Product")',
+                    deleteProduct: '@Url.Action("DeleteProduct", "Product")'
+                }
+            }
+
+            var page = new Page({
+                element: $('[data-component="page"]'),
+                options: {
+                    productComponentOptions: productComponentOptions
+                }
+            });
+        });
+    </script>
+}

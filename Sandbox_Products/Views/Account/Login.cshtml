@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Log in";
+}
+
+<h2>@ViewBag.Title.</h2>
+<div data-component="page">
+    <div data-component="auth">
+        <div data-component="login"></div>
+    </div>
+</div>
+
+@Html.Partial("sb_login_template")
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        //  options
+        //      authComponentOptions
+        //  endpoints
+        //      aferLoginRedirectUrl
+        //  components
+        //      authComponent
+        function Page(options){
+            Component.apply(this, arguments);
+
+            this._initComponents();
+            this._initHandlers();
+        }
+
+        Page.prototype = Object.create(Component.prototype);
+        
+        Page.prototype._initComponents = function(){
+            this._components.authComponent = new Sb_Auth(this._options.authComponentOptions);
+        };
+
+        Page.prototype._initHandlers = function(){
+            var self = this;
+
+            this._components.authComponent.on('login:success', function(e, data) {
+                window.location.href = data.returnUrl;
+            });
+        };
+
+        $(function () {
+            var loginComponentOptions = {
+                element: $('[data-component="login"]'),
+                endpoints: {
+                    loginUrl: '@Url.Action("Login", "Account")'
+                }
+            };
+
+            var authComponentOptions = {
+                element: $('[data-component="auth"]'),
+                options: {
+                    loginComponentOptions: loginComponentOptions
+                }                    
+            };   
+
+            var page = new Page({
+                element: $('[data-component="page"]'),
+                options: {
+                    authComponentOptions: authComponentOptions
+                }                
+            });
+        });
+    </script>
+}

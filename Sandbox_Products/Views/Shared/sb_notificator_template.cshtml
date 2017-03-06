@@ -1,0 +1,16 @@
+﻿@* 
+    options
+        message
+        errors: [error]
+ *@
+
+<script type="text/template" id="sb_notificator_template">
+    <p class="text-danger"><%- message %></p>
+    <ul class="text-danger">
+        <% if (errors != null) { %>
+            <% errors.forEach(function(error) { %>
+            <li><%-error%></li>
+            <% }); %>
+        <% } %>        
+    </ul>
+</script>
